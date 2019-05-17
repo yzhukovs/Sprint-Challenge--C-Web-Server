@@ -44,7 +44,14 @@ urlinfo_t *parse_url(char *url)
     5. Set the port pointer to 1 character after the spot returned by strchr.
     6. Overwrite the colon with a '\0' so that we are just left with the hostname.
   */
-
+    urlinfo->hostname = strdup(url) ; //making copy of the input url
+char *slash = strchr(urlinfo->hostname, '/'); //defining slash
+  urlinfo->path = strdup(slash+1); // getting the path after the slash
+    slash[0] = '\0'; // Overwrite the slash with a '\0'
+    
+    char *colon = strchr(urlinfo->hostname, ':'); //Use strchr to find the first colon in the URL
+    urlinfo->port = strdup(colon+1); //Set the port pointer to 1 character after the spot returned by strchr.
+    colon[0] = '\0' ; //6. Overwrite the colon with a '\0' so that we are just left with the hostname.
   ///////////////////
   // IMPLEMENT ME! //
   ///////////////////
