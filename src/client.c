@@ -77,7 +77,7 @@ int send_request(int fd, char *hostname, char *port, char *path)
     int response_length = snprintf(
                            request,
                            max_request_size,
-                           "GET %s HTTP/1.1\n"
+                           "GET /%s HTTP/1.1\n"
                            "Host: %s:%s\n"
                            "Connection: close\n"
                            "\n",
@@ -86,7 +86,7 @@ int send_request(int fd, char *hostname, char *port, char *path)
                            port
                            );
     
-    rv = send(socket, request, response_length, 0);
+    rv = send(fd, request, response_length, 0);
     
     if (rv < 0) {
         perror("send");
@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
 
     urlinfo_t *urlinfo = parse_url(argv[1]); //Parse the input URL
     sockfd = get_socket(urlinfo->hostname, urlinfo->port);  // Initialize a socket by calling the `get_socket` function from lib.c
-    printf("\n\n");
+    
    //Call `send_request` to construct the request and send it
     if( send_request(sockfd, urlinfo->hostname, urlinfo->port, urlinfo->path) >= 0) { //Call `send_request` to construct the request and send it
         while ((numbytes = recv(sockfd, buf, BUFSIZE - 1, 0)) > 0) {  //Call `recv` in a loop until there is no more data to receive from the server.
@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
             printf("%s", buf); //  Print the received response to stdout.
         }
     }
-    printf("\n");
+    printf("\n\n");
     // 5. Clean up any allocated memory and open file descriptors.
     free(urlinfo->hostname);
     free(urlinfo->port);
